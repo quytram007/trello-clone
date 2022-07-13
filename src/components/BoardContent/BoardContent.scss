@@ -25,4 +25,37 @@
          border: 1px dashed #abc;
          margin: 5px 45px 5px 5px;
      }
+
+     .add-new-column {
+         width: 250px;
+         //  height: 32px;
+         line-height: 32px;
+         padding: 5px 0 5px 15px;
+         cursor: pointer;
+         color: white;
+         font-size: 15px;
+         background-color: hsla(0, 0, 100, 0.24);
+         margin-left: $gap;
+         border-radius: $border-radius;
+     }
+
+     .content-add-column {
+         margin-left: 10px;
+         padding: 5px;
+         width: 250px;
+         background-color: hsla(0, 0, 100, 0.24);
+
+         .group-btn {
+             display: flex;
+             align-items: center;
+             margin-top: 10px;
+             cursor: pointer;
+
+             i.fa.fa-times.icon {
+                 margin-left: 9px;
+                 font-size: 25px;
+                 color: white;
+             }
+         }
+     }
  }
