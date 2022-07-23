@@ -84,62 +84,69 @@ const BoardContent = () => {
 
         , []);
 
+    const onUpdateColumn = (newColumn) => {
+        const columnIdUpdate = newColumn.id;
+        let ncolumns = [...columns];
+        let index = ncolumns.findIndex(item => item.id === columnIdUpdate)
+
+        if (newColumn._destroy) {
+            ncolumns.splice(index, 1);
+        } else {
+            ncolumns[index] = newColumn;
+        }
+        setColumns(ncolumns)
+    }
     if (_.isEmpty(board)) {
         return (<> <div className='not-found'>Board not found</div> </>)
     }
 
-    return (<> <div className='board-columns'> <Container orientation="horizontal"
+    return (
+        <>
+            <div className='board-columns'>
+                <Container orientation="horizontal"
 
-        getChildPayload={
-            index => columns[index]
-        }
+                    getChildPayload={index => columns[index]}
 
-        onDrop={
-            onColumnDrop
-        }
+                    onDrop={onColumnDrop}
 
-        dragHandleSelector=".column-drag-handle"
+                    dragHandleSelector=".column-drag-handle"
 
-        dropPlaceholder={
-            {
-                animationDuration: 150,
-                showOnTop: true,
-                className: 'column-drop-preview'
-            }
-        }
+                    dropPlaceholder={
+                        {
+                            animationDuration: 150,
+                            showOnTop: true,
+                            className: 'column-drop-preview'
+                        }
+                    }
 
-    > {
-            columns && columns.length > 0 && columns.map((column, index) => {
-                return (<Draggable key={
-                    column.id
-                }
+                > {
+                        columns && columns.length > 0 && columns.map((column, index) => {
+                            return (
+                                <Draggable key={column.id}>
+                                    <Column
+                                        column={column}
+                                        onCardDrop={onCardDrop}
+                                        onUpdateColumn={onUpdateColumn} />
+                                </Draggable>)
+                        }
 
-                > <Column column={
-                    column}
-
-                    onCardDrop={onCardDrop}
-
-
-                    /> </Draggable>)
-            }
-
-            )
-        }
-        {(isShowAddColumn === false) ?
-            <div className="add-new-column" onClick={() => setIsShowAddColumn(true)}>
-                <i className="fa fa-plus icon"></i>
-                Add New Column
-            </div>
-            :
-            <div className='content-add-column'>
-                <input type='text' className="form-control" ref={inputRef} value={valueInput} onChange={(event) => setValueInput(event.target.value)} />
-                <div className="group-btn">
-                    <button className="btn btn-success" onClick={() => handleAddColumn()}>Add column</button>
-                    <i className="fa fa-times icon" onClick={() => setIsShowAddColumn(false)} />
-                </div>
-            </div>
-        }
-    </Container> </div> </>)
+                        )
+                    }
+                    {(isShowAddColumn === false) ?
+                        <div className="add-new-column" onClick={() => setIsShowAddColumn(true)}>
+                            <i className="fa fa-plus icon"></i>
+                            Add New Column
+                        </div>
+                        :
+                        <div className='content-add-column'>
+                            <input type='text' className="form-control" ref={inputRef} value={valueInput} onChange={(event) => setValueInput(event.target.value)} />
+                            <div className="group-btn">
+                                <button className="btn btn-success" onClick={() => handleAddColumn()}>Add column</button>
+                                <i className="fa fa-times icon" onClick={() => setIsShowAddColumn(false)} />
+                            </div>
+                        </div>
+                    }
+                </Container> </div> </>)
 }
 
 export default BoardContent;

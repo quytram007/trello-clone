@@ -21,4 +21,14 @@ body {
     font-size: 14px;
     margin-right: 3px;
   }
+  .customize-input-column{
+    &:focus{
+      outline: none !important;
+      box-shadow: none !important;
+      
+    }
+    cursor: pointer;
+    border: none;
+    background-color: inherit;
+  }
 }
