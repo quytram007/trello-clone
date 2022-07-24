@@ -49,7 +49,22 @@
             }
         }
     }
+    .add-new-card{
+        border-bottom-left-radius: $border-radius;
+        border-bottom-right-radius: $border-radius;
+        .group-btn {
+             display: flex;
+             align-items: center;
+             margin-top: 10px;
+             cursor: pointer;
 
+             i.fa.fa-times.icon {
+                 margin-left: 9px;
+                 font-size: 25px;
+                 color: #b3b3b3;
+             }
+         }
+    }
     footer {
         padding-left: 15px;
         height: $column-footer-height;
@@ -109,6 +124,10 @@
             background-color: rgba(150, 150, 200, 0.1);
             border: 1px dashed #abc;
             margin: 5px;
+        }
+        &:last-child{
+            border-bottom-left-radius: $border-radius;
+            border-bottom-right-radius: $border-radius;
         }
     }
 }

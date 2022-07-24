@@ -7,20 +7,30 @@ import ConfirmModal from '../Common/ConfirmModal';
 import { useEffect, useRef, useState } from 'react';
 import { MODAL_ACTION_CLOSE, MODAL_ACTION_CONFIRM } from '../../utilities/constant';
 import { FormControl } from 'react-bootstrap';
+import { v4 as uuidv4 } from 'uuid';
 const Column = (props) => {
     const { column, onCardDrop, onUpdateColumn } = props;
     const cards = mapOrders(column.cards, column.cardOrder, 'id');
 
+    const [valueNewCard, setValueNewCard] = useState('')
     const [isShowModelDelete, setisShowModelDelete] = useState(false);
     const [titleColumn, setTitleColumn] = useState('');
     const [isFirstClick, setIsFirstClick] = useState(true);
     const inputRef = useRef(null)
-
+    const inputTextAreaRef = useRef(null)
+    const [isShowAddCard, setIsShowAddCard] = useState(false)
     useEffect(() => {
         if (column && column.title) {
             setTitleColumn(column.title)
         }
     }, [column])
+
+    useEffect(() => {
+        if (isShowAddCard === true && inputTextAreaRef && inputTextAreaRef.current) {
+            inputTextAreaRef.current.focus();
+        }
+
+    }, [isShowAddCard])
     const toggleModal = () => {
         setisShowModelDelete(!isShowModelDelete)
     }
@@ -46,9 +56,6 @@ const Column = (props) => {
             inputRef.current.setSelectionRange(titleColumn.length, titleColumn.length)
         }
     }
-    const handleTitleChange = () => {
-
-    }
     const handleClickOutSide = () => {
         setIsFirstClick(true)
         const newColumn = {
@@ -57,6 +64,27 @@ const Column = (props) => {
             _destroy: false
         }
         onUpdateColumn(newColumn)
+    }
+    const handleConfirmNewCard = () => {
+        if (isShowAddCard === true && !valueNewCard) {
+            inputTextAreaRef.current.focus();
+            return;
+        }
+
+        const newCard = {
+            id: uuidv4(),
+            boardId: column.boardId,
+            columnId: column.id,
+            title: valueNewCard,
+            image: null
+        }
+        let newColumn = { ...column };
+        newColumn.cards = [...newColumn.cards, newCard];
+        newColumn.cardOrder = newColumn.cards.map(card => card.id)
+
+        onUpdateColumn(newColumn)
+        setValueNewCard("")
+        setIsShowAddCard(!isShowAddCard)
     }
 
     return (
@@ -126,14 +154,33 @@ const Column = (props) => {
                             )
                         })}
                     </Container>
+                    {(isShowAddCard === true) &&
+                        <div className='add-new-card'>
+                            <textarea type='text'
+                                className="form-control"
+                                rows='2'
+                                ref={inputTextAreaRef}
+                                placeholder='Enter a new card...'
+                                value={valueNewCard}
+                                onChange={(event) => { setValueNewCard(event.target.value) }}
+                            ></textarea>
+                            <div className="group-btn"          >
+                                <button className="btn btn-primary"
+                                    onClick={() => { handleConfirmNewCard() }}>
+                                    Add Card</button>
+                                <i className="fa fa-times icon" onClick={() => setIsShowAddCard(!isShowAddCard)} />
+                            </div>
+                        </div>
+                    }
                 </div>
-
-                <footer>
-                    <div className='footer-action'>
-                        <i className='fa fa-plus icon'></i>
-                        Add another card
-                    </div>
-                </footer>
+                {isShowAddCard === false &&
+                    <footer>
+                        <div className='footer-action' onClick={() => setIsShowAddCard(!isShowAddCard)}>
+                            <i className='fa fa-plus icon'></i>
+                            Add another card
+                        </div>
+                    </footer>
+                }
             </div>
             <ConfirmModal
                 show={isShowModelDelete}
